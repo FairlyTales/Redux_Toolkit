@@ -1,6 +1,8 @@
 import React, {FC} from 'react';
 import {useDispatch} from "react-redux";
-import {removeReservation} from "./features/reservationSlice";
+import {addCustomer, Customer, removeReservation} from "./features";
+import {v4 as uuid} from 'uuid';
+import {AppDispatch} from "./app/store";
 
 export interface ReservationCardProps {
   name: string;
@@ -8,14 +10,21 @@ export interface ReservationCardProps {
 }
 
 export const ReservationCard: FC<ReservationCardProps> = ({name, index}) => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleRemove = () => {
     dispatch(removeReservation(index));
   }
 
   const handleAdd = () => {
-    // dispatch();
+    const newCustomer: Customer = {
+      name,
+      id: uuid(),
+      food: [],
+    }
+
+    dispatch(addCustomer(newCustomer));
+    dispatch(removeReservation(index));
   }
 
   return (
